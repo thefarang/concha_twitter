@@ -3,8 +3,7 @@ FROM node:8.5.0-alpine
 RUN mkdir -p /app/bin /app/src /app/test
 WORKDIR /app
 
-# COPY package.json npm-shrinkwrap.json /app/
-COPY package.json /app/
+COPY package.json npm-shrinkwrap.json /app/
 RUN npm install --silent
 RUN npm cache clean --force --silent
 
