@@ -1,5 +1,10 @@
 'use strict'
 
+// First load in modules
+// Wrap mongoose in Mockgoose
+// Populate with test data
+// Perform tests...
+
 const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
