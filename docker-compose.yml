@@ -37,8 +37,9 @@ services:
       # github.
       - ./npm-shrinkwrap.json:/app/npm-shrinkwrap.json
 
-      # Make coveralls available to Docker, for local instrumentation
-      - ./.coveralls.yml:/app/.coveralls.yml
+      # Make .babelrc available to Docker so that Babel can transpile the ES6 source code
+      # into JavaScript that can run on the current version of Nodejs.
+      - ./.babelrc:/app/.babelrc
     command: npm run debug
     ports:
       # Expose port to host machine for debugging
