@@ -36,6 +36,9 @@ services:
       # in the docker container are reflected back to the host, where they can be committed to
       # github.
       - ./npm-shrinkwrap.json:/app/npm-shrinkwrap.json
+
+      # Make coveralls available to Docker, for local instrumentation
+      - ./.coveralls.yml:/app/.coveralls.yml
     command: npm run debug
     ports:
       # Expose port to host machine for debugging
