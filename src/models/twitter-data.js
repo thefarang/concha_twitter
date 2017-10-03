@@ -2,7 +2,6 @@
 
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const ObjectId = mongoose.Types.ObjectId
 
 const TwitterDataSchema = new Schema({
   // _id will be created by default

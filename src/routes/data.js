@@ -8,10 +8,9 @@ const ObjectId = mongoose.Types.ObjectId
 const router = express.Router()
 
 router.get('/:concha_user_id', function (req, res, next) {
-
-  TwitterData.findOne({ 
-    concha_user_id: new ObjectId(req.params.concha_user_id) 
-  }, 
+  TwitterData.findOne({
+    concha_user_id: new ObjectId(req.params.concha_user_id)
+  },
   (err, data) => {
     if (err) {
       return next(err)
@@ -28,10 +27,9 @@ router.get('/:concha_user_id', function (req, res, next) {
 })
 
 router.get('/age/:concha_user_id', function (req, res, next) {
-  
-  TwitterData.findOne({ 
-    concha_user_id: new ObjectId(req.params.concha_user_id) 
-  }, 
+  TwitterData.findOne({
+    concha_user_id: new ObjectId(req.params.concha_user_id)
+  },
   (err, data) => {
     if (err) {
       return next(err)

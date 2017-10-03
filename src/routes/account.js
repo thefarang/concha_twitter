@@ -9,7 +9,6 @@ const router = express.Router()
 
 // Links the Concha user's account to Twitter
 router.post('/link', (req, res, next) => {
-
   const twitterData = new TwitterData()
   twitterData.concha_user_id = new ObjectId(req.body.concha_user_id)
   twitterData.twitter_id = req.body.twitter_id
@@ -31,12 +30,10 @@ router.post('/link', (req, res, next) => {
 
 // Unlinks the Concha user's account from their Twitter account
 router.delete('/link/:concha_user_id', (req, res, next) => {
-
-  TwitterData.findOne({ 
-    concha_user_id: new ObjectId(req.params.concha_user_id) 
-  }, 
+  TwitterData.findOne({
+    concha_user_id: new ObjectId(req.params.concha_user_id)
+  },
   (err, data) => {
-    
     if (err) {
       return next(err)
     }
