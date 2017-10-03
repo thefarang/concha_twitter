@@ -11,7 +11,7 @@ script:
   - docker-compose run concha_twitter /bin/sh -c "npm run lint && npm test"
 
 after_success:
-  - docker-compose run concha_twitter /bin/sh -c "npm run coveralls"
+  - docker-compose run concha_twitter /bin/sh -c "COVERALLS_SERVICE_NAME=${COVERALLS_SERVICE_NAME} COVERALLS_REPO_TOKEN=${COVERALLS_REPO_TOKEN} npm run coveralls"
 
 after_script:
   - docker-compose down
