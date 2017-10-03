@@ -1,44 +1,64 @@
 'use strict'
 
-const express = require('express')
-const path = require('path')
-// const favicon = require('serve-favicon')
-const bodyParser = require('body-parser')
+// @todo
+// Does not yet support HATEOS
 
-const index = require('./routes/index')
-const users = require('./routes/users')
+// @todo
+// Include validation middleware on all incoming user data
+
+const express = require('express')
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+
+const data = require('./routes/data')
+const account = require('./routes/account')
+
+// Database connection
+// @todo replace this with config
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://mongo:27017/local', {
+  useMongoClient: true
+})
+
+// Close the database connection when Node process ends.
+process.on('SIGINT', () => {
+  mongoose.connection.close(() => {
+    // @todo add logging here.
+    process.exit(0)
+  })
+})
 
 const app = express()
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'ejs')
+// Middleware to check each client request specifically accepts JSON responses.
+app.use((req, res, next) => {
+  const acceptHeader = req.get('accept')
+  if ((acceptHeader === undefined) || (acceptHeader.indexOf('application/json') === -1)) {
+    const err = new Error()
+    err.status = 406
+    return next(err)
+  }
+  next()
+})
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', index)
-app.use('/users', users)
+app.use('/api/v1/data', data)
+app.use('/api/v1/account', account)
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  const err = new Error('Not Found')
+// Default 404 handler, called when no routes match the requested route.
+app.use((req, res, next) => {
+  const err = new Error()
   err.status = 404
   next(err)
 })
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-  // render the error page
+// Error handler.
+app.use((err, req, res, next) => {
+  res.set('Cache-Control', 'private, max-age=0, no-cache')
   res.status(err.status || 500)
-  res.render('error')
+  res.json()
 })
 
 module.exports = app

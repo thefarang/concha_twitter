@@ -6,16 +6,18 @@
     "lint": "./node_modules/.bin/standard \"src/**/*.js\"",
     "fix-style": "./node_modules/.bin/standard --fix \"src/**/*.js\"",
     "debug": "./node_modules/.bin/nodemon ./bin/www",
-    "test": "exit 0"
+    "test": "./node_modules/.bin/mocha --timeout 10000 \"test/routes/*.js\""
   },
   "dependencies": {
     "body-parser": "1.18.2",
-    "ejs": "2.5.7",
     "express": "4.15.5",
-    "serve-favicon": "2.4.5"
+    "mongoose": "4.11.12"
   },
   "devDependencies": {
     "nodemon": "1.12.1",
-    "standard": "10.0.3"
+    "standard": "10.0.3",
+    "mocha": "3.5.3",
+    "chai": "4.1.2",
+    "chai-http": "3.0.0"
   }
 }
