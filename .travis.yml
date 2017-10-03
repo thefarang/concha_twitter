@@ -8,7 +8,10 @@ services:
 
 script:
   - docker-compose build
-  - docker-compose run concha_twitter /bin/sh -c "npm run lint && npm test"
+  - docker-compose run concha_twitter /bin/sh -c "npm run lint && npm test && npm run coveralls"
+
+#after_success:
+#- npm run coveralls
 
 after_script:
   - docker-compose down
