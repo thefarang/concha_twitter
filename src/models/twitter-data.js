@@ -10,12 +10,16 @@ const TwitterDataSchema = new Schema({
   // Links to the concha User account
   concha_user_id: {
     type: Schema.ObjectId,
+    unique: true,
     required: true
   },
 
+  // @todo
+  // Test for this, what do we do if a duplicate is submitted?
   // Twitter id, confirmed during the Twitter web-sign-in process.
   twitter_id: {
     type: String,
+    unique: true,
     trim: true,
     required: true
   },
@@ -36,6 +40,7 @@ const TwitterDataSchema = new Schema({
   // Twitter screenname
   screenname: {
     type: String,
+    unique: true,
     trim: true,
     required: true
   },
@@ -43,6 +48,7 @@ const TwitterDataSchema = new Schema({
   // Twitter url
   url: {
     type: String,
+    unique: true,
     trim: true,
     required: true
   },
@@ -51,19 +57,12 @@ const TwitterDataSchema = new Schema({
   // data refresh.
   age: {
     type: Date,
-    required: true
+    required: true,
+    default: '1970-01-01T00:00:00.000Z'
   }
 }, {
   collection: 'twitter'
 })
-
-// Query helper method. Attach this to a Query chain. Will findOne()
-// after converting the conchaUserStringId into a conchaUserObjectId
-// Example:
-// TwitterData.find().byObjectId('12345').exec((data, err) => {})
-TwitterDataSchema.query.byObjectId = function(conchaUserStringId) {
-  return this.findOne({ concha_user_id: new ObjectId(conchaUserStringId) });
-};
 
 // Generate a Model from the Schema.
 let TwitterData = mongoose.model('TwitterData', TwitterDataSchema)

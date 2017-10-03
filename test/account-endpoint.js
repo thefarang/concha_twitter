@@ -10,11 +10,8 @@ const app = require('../src/app')
 const ObjectId = mongoose.Types.ObjectId
 chai.use(chaiHttp)
 
-const conchaUserUnknownId = '507f1f77bcf86cd799439010'
-const conchaUserKnownId = '507f1f77bcf86cd799439011'
+describe('Twitter Account API Endpoint', () => {
 
-describe('Twitter Data API Endpoint', () => {
-  
   before(async () => {
     return new Promise((resolve, reject) => {
 
@@ -71,51 +68,69 @@ describe('Twitter Data API Endpoint', () => {
     })
   })
 
-  it ('Should return 404 if user Twitter data does not exist', (done) => {
+  it ('Should return 409 if user Twitter account is already linked', (done) => {
     chai
       .request(app)
-      .get(`/api/v1/data/${conchaUserUnknownId}`)
+      .post(`/api/v1/account/link`)
       .set('Accept', 'application/json')
+      .send({ 
+        concha_user_id: '507f1f77bcf86cd799439011',
+        twitter_id: '2222333344445555',
+        oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',
+        oauth_secret: 'PbKfYqSryyeKDWz4ebtY3o5ogNLG11WJuZBc9fQrQo',
+        screenname: 'test_user',
+        url: 'https://twitter.com/test_user'
+      })
       .end((err, res) => {
-        expect(res).to.have.status(404)
+        expect(res).to.have.status(409)
         expect(res).to.be.json
         expect(res.text).to.be.empty
         done()
       })
   })
 
-  it ('Should return 200 and Twitter data if user Twitter data exists', (done) => {
+  it ('Should return 200 if user Twitter account is successfully linked', (done) => {
     chai
       .request(app)
-      .get(`/api/v1/data/${conchaUserKnownId}`)
+      .post(`/api/v1/account/link`)
       .set('Accept', 'application/json')
+      .send({ 
+        concha_user_id: '507f1f77bcf86cd799439020',
+        twitter_id: '2222333344445566',
+        oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',
+        oauth_secret: 'PbKfYqSryyeKDWz4ebtY3o5ogNLG11WJuZBc9fQrQo',
+        screenname: 'test_user2',
+        url: 'https://twitter.com/test_user2'
+      })
       .end((err, res) => {
-        const responseContents = JSON.parse(res.text)
-
         expect(res).to.have.status(200)
         expect(res).to.be.json
-        expect(responseContents.concha_user_id).to.equal('507f1f77bcf86cd799439011')
-        expect(responseContents.twitter_id).to.equal('12345678901234567890')
-        expect(responseContents.oauth_token).to.equal('7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&')
-        expect(responseContents.oauth_secret).to.equal('PbKfYqSryyeKDWz4ebtY3o5ogNLG11WJuZBc9fQrQo')
-        expect(responseContents.screenname).to.equal('concha_app')
-        expect(responseContents.url).to.equal('https://twitter.com/concha_app')
-        expect(responseContents.age).to.equal('1970-01-01T00:00:00.000Z')
+        expect(res.text).to.be.empty
         done()
       })
   })
 
-  it ('Should return 200 and the age of the Twitter data if user Twitter data exists', (done) => {
+  it ('Should return 204 if users Twitter account is successfully unlinked', (done) => {
     chai
       .request(app)
-      .get(`/api/v1/data/age/${conchaUserKnownId}`)
+      .del(`/api/v1/account/link/507f1f77bcf86cd799439011`)
       .set('Accept', 'application/json')
       .end((err, res) => {
-        const responseContents = JSON.parse(res.text)
+        expect(res).to.have.status(204)
+        expect(res.text).to.be.empty
+        done()
+      })
+  })
 
-        expect(res).to.have.status(200)
+  it ('Should return 404 if users Twitter account does not exist and cannot be unlinked', (done) => {
+    chai
+      .request(app)
+      .del(`/api/v1/account/link/507f1f77bcf86cd799439099`)
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        expect(res).to.have.status(404)
         expect(res).to.be.json
-        expect(responseContents.age).to.equal('1970-01-01T00:00:00.000Z')
+        expect(res.text).to.be.empty
         done()
       })
   })
