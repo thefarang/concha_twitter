@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build": "./node_modules/.bin/babel src -d lib",  // @todo change to build/
+    "debuggg": "https://github.com/kmagiera/babel-watch", // @todo use this instead of nodemon
     "lint": "./node_modules/.bin/standard \"src/**/*.js\"",
     "fix-style": "./node_modules/.bin/standard --fix \"src/**/*.js\"",
     "debug": "./node_modules/.bin/nodemon ./bin/www",
@@ -23,6 +25,8 @@
     "chai-http": "3.0.0",
     "istanbul": "0.4.5",
     "coveralls": "3.0.0",
-    "mocha-lcov-reporter": "1.3.0"
+    "mocha-lcov-reporter": "1.3.0",
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.6.0"
   }
 }
