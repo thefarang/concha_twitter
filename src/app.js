@@ -39,15 +39,23 @@ amqp.connect('amqp://rabbitmq', (err, conn) => {
     process.exit(0)
   }
 
-  conn.createChannel((err, ch) => {
+  conn.createChannel((err, channel) => {
     if (err) {
       // @todo add logging here.
       process.exit(0)
     }
     // @todo config
     const q = 'twitter_receive'
-    ch.assertQueue(q, {durable: false})
-    ch.consume(q, msg => updateAccount(JSON.parse(msg.content.toString())), { noAck: true })
+
+    // @todo
+    // Make durable (and update the test/lib/update-account.js file too)
+    channel.assertQueue(q, { durable: false })
+
+    // Maximum number of unacknowledged messages. RabbitMQ will not despatch
+    // any more messages to this worker if 10 concurrent messages are being processed,
+    // until one or more of those messages are acknowledged.
+    channel.prefetch(10)
+    channel.consume(q, msg => updateAccount(JSON.parse(msg.content.toString())), { noAck: false })
   })
 })
 

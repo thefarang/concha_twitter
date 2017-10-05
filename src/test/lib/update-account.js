@@ -43,7 +43,7 @@ describe('Twitter Account Message Broker', () => {
       no_of_replies_received: 5,
       no_of_retweets_received: 50
     })
-    mbChannel.sendToQueue(mbQueue, Buffer.from(payload, 'UTF-8'))
+    mbChannel.sendToQueue(mbQueue, Buffer.from(payload, 'UTF-8'), { persistent: false })
 
     // Wait a couple of seconds to allow the message to be picked up off
     // the queue and processed, then check to ensure the database was
