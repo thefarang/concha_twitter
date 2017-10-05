@@ -9,7 +9,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const amqp = require('amqplib/callback_api')
 
+const updateAccount = require('./lib/update-account')
 const data = require('./routes/data')
 const account = require('./routes/account')
 
@@ -25,6 +27,41 @@ process.on('SIGINT', () => {
   mongoose.connection.close(() => {
     // @todo add logging here.
     process.exit(0)
+  })
+})
+
+// Message broker connection
+// @todo config
+amqp.connect('amqp://rabbitmq', (err, conn) => {
+  conn.createChannel((err, ch) => {
+
+    // @todo config
+    const q = 'twitter_receive';
+    ch.assertQueue(q, {durable: false});
+    ch.consume(q, msg => updateAccount(JSON.parse(msg.content.toString())), { noAck: true })
+
+    // @todo
+    // TESTING CODE
+    /*
+    const payload = JSON.stringify({
+      concha_user_id: '507f1f77bcf86cd799439011',
+      twitter_id: 12345678901,
+      username: "concha_app",
+      link: "https://www.twitter.com/concha_app",
+      no_of_followers: 100,
+      no_of_tweets: 50,
+      no_of_likes_received: 200,
+      no_of_replies_received: 5,
+      no_of_retweets_received: 50
+    })
+    */
+    /*
+    const payload = JSON.stringify({
+      concha_user_id: '507f1f77bcf86cd799439011',
+      url: "THE BIG FISH"
+    })
+    ch.sendToQueue(q, new Buffer(payload, 'UTF-8'))
+    */
   })
 })
 

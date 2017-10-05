@@ -1,7 +1,7 @@
 'use strict'
 
 const mongoose = require('mongoose')
-const TwitterData = require('../../src/models/twitter-data')
+const TwitterData = require('../../models/twitter-data')
 
 const ObjectId = mongoose.Types.ObjectId
 
