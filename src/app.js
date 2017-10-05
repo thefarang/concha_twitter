@@ -9,7 +9,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const amqp = require('amqplib/callback_api')
 
+const updateAccount = require('./lib/update-account')
 const data = require('./routes/data')
 const account = require('./routes/account')
 
@@ -25,6 +27,35 @@ process.on('SIGINT', () => {
   mongoose.connection.close(() => {
     // @todo add logging here.
     process.exit(0)
+  })
+})
+
+// @todo - continue page 2 of the tutorial for persistance
+// Message broker connection
+// @todo config
+amqp.connect('amqp://rabbitmq', (err, conn) => {
+  if (err) {
+    // @todo add logging here.
+    process.exit(0)
+  }
+
+  conn.createChannel((err, channel) => {
+    if (err) {
+      // @todo add logging here.
+      process.exit(0)
+    }
+    // @todo config
+    const q = 'twitter_receive'
+
+    // @todo
+    // Make durable (and update the test/lib/update-account.js file too)
+    channel.assertQueue(q, { durable: false })
+
+    // Maximum number of unacknowledged messages. RabbitMQ will not despatch
+    // any more messages to this worker if 10 concurrent messages are being processed,
+    // until one or more of those messages are acknowledged.
+    channel.prefetch(10)
+    channel.consume(q, msg => updateAccount(JSON.parse(msg.content.toString())), { noAck: false })
   })
 })
 

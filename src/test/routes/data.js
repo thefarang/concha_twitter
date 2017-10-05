@@ -4,24 +4,27 @@ const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
 const testDb = require('../support/db')
-const app = require('../../src/app')
+const app = require('../../app')
 
 chai.use(chaiHttp)
 
 const conchaUserUnknownId = '507f1f77bcf86cd799439010'
 const conchaUserKnownId = '507f1f77bcf86cd799439011'
 
+/* eslint-disable no-unused-expressions */
+/* eslint-disable handle-callback-err */
 describe('Twitter Data API Endpoint', () => {
-  
   before(async () => {
-    await testDb.setup()
+    await testDb.connect()
+    await testDb.clean()
+    await testDb.populate()
   })
 
   after(async () => {
-    await testDb.tearDown()
+    await testDb.close()
   })
 
-  it ('Should return 404 if user Twitter data does not exist', (done) => {
+  it('Should return 404 if user Twitter data does not exist', (done) => {
     chai
       .request(app)
       .get(`/api/v1/data/${conchaUserUnknownId}`)
@@ -34,14 +37,13 @@ describe('Twitter Data API Endpoint', () => {
       })
   })
 
-  it ('Should return 200 and Twitter data if user Twitter data exists', (done) => {
+  it('Should return 200 and Twitter data if user Twitter data exists', (done) => {
     chai
       .request(app)
       .get(`/api/v1/data/${conchaUserKnownId}`)
       .set('Accept', 'application/json')
       .end((err, res) => {
         const responseContents = JSON.parse(res.text)
-
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(responseContents.concha_user_id).to.equal('507f1f77bcf86cd799439011')
@@ -55,14 +57,13 @@ describe('Twitter Data API Endpoint', () => {
       })
   })
 
-  it ('Should return 200 and the age of the Twitter data if user Twitter data exists', (done) => {
+  it('Should return 200 and the age of the Twitter data if user Twitter data exists', (done) => {
     chai
       .request(app)
       .get(`/api/v1/data/age/${conchaUserKnownId}`)
       .set('Accept', 'application/json')
       .end((err, res) => {
         const responseContents = JSON.parse(res.text)
-
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(responseContents.age).to.equal('1970-01-01T00:00:00.000Z')
@@ -70,3 +71,5 @@ describe('Twitter Data API Endpoint', () => {
       })
   })
 })
+/* eslint-enable handle-callback-err */
+/* eslint-enable no-unused-expressions */
