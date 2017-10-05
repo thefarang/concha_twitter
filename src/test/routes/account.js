@@ -8,8 +8,9 @@ const app = require('../../app')
 
 chai.use(chaiHttp)
 
+/* eslint-disable no-unused-expressions */
+/* eslint-disable handle-callback-err */
 describe('Twitter Account API Endpoint', () => {
-
   before(async () => {
     await testDb.connect()
     await testDb.clean()
@@ -20,12 +21,12 @@ describe('Twitter Account API Endpoint', () => {
     await testDb.close()
   })
 
-  it ('Should return 409 if user Twitter account is already linked', (done) => {
+  it('Should return 409 if user Twitter account is already linked', (done) => {
     chai
       .request(app)
       .post(`/api/v1/account/link`)
       .set('Accept', 'application/json')
-      .send({ 
+      .send({
         concha_user_id: '507f1f77bcf86cd799439011',
         twitter_id: '2222333344445555',
         oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',
@@ -41,12 +42,12 @@ describe('Twitter Account API Endpoint', () => {
       })
   })
 
-  it ('Should return 200 if user Twitter account is successfully linked', (done) => {
+  it('Should return 200 if user Twitter account is successfully linked', (done) => {
     chai
       .request(app)
       .post(`/api/v1/account/link`)
       .set('Accept', 'application/json')
-      .send({ 
+      .send({
         concha_user_id: '507f1f77bcf86cd799439020',
         twitter_id: '2222333344445566',
         oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',
@@ -62,7 +63,7 @@ describe('Twitter Account API Endpoint', () => {
       })
   })
 
-  it ('Should return 204 if users Twitter account is successfully unlinked', (done) => {
+  it('Should return 204 if users Twitter account is successfully unlinked', (done) => {
     chai
       .request(app)
       .del(`/api/v1/account/link/507f1f77bcf86cd799439011`)
@@ -74,7 +75,7 @@ describe('Twitter Account API Endpoint', () => {
       })
   })
 
-  it ('Should return 404 if users Twitter account does not exist and cannot be unlinked', (done) => {
+  it('Should return 404 if users Twitter account does not exist and cannot be unlinked', (done) => {
     chai
       .request(app)
       .del(`/api/v1/account/link/507f1f77bcf86cd799439099`)
@@ -87,3 +88,5 @@ describe('Twitter Account API Endpoint', () => {
       })
   })
 })
+/* eslint-enable handle-callback-err */
+/* eslint-enable no-unused-expressions */

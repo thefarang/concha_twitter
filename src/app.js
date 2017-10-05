@@ -34,11 +34,19 @@ process.on('SIGINT', () => {
 // Message broker connection
 // @todo config
 amqp.connect('amqp://rabbitmq', (err, conn) => {
-  conn.createChannel((err, ch) => {
+  if (err) {
+    // @todo add logging here.
+    process.exit(0)
+  }
 
+  conn.createChannel((err, ch) => {
+    if (err) {
+      // @todo add logging here.
+      process.exit(0)
+    }
     // @todo config
-    const q = 'twitter_receive';
-    ch.assertQueue(q, {durable: false});
+    const q = 'twitter_receive'
+    ch.assertQueue(q, {durable: false})
     ch.consume(q, msg => updateAccount(JSON.parse(msg.content.toString())), { noAck: true })
   })
 })

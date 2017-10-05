@@ -15,8 +15,9 @@ let mbChannel = null
 let mbQueue = null
 const conchaUserId = '507f1f77bcf86cd799439011'
 
+/* eslint-disable no-unused-expressions */
+/* eslint-disable handle-callback-err */
 describe('Twitter Account Message Broker', () => {
-
   before(async () => {
     await testDb.connect()
     await testDb.clean()
@@ -32,8 +33,7 @@ describe('Twitter Account Message Broker', () => {
     await testDb.close()
   })
 
-  it ('Should correctly trigger an update of the database', (done) => {
-
+  it('Should correctly trigger an update of the database', (done) => {
     // First create a payload and publish an update to the message broker.
     const payload = JSON.stringify({
       concha_user_id: conchaUserId,
@@ -43,10 +43,10 @@ describe('Twitter Account Message Broker', () => {
       no_of_replies_received: 5,
       no_of_retweets_received: 50
     })
-    mbChannel.sendToQueue(mbQueue, new Buffer(payload, 'UTF-8'))
+    mbChannel.sendToQueue(mbQueue, Buffer.from(payload, 'UTF-8'))
 
     // Wait a couple of seconds to allow the message to be picked up off
-    // the queue and processed, then check to ensure the database was 
+    // the queue and processed, then check to ensure the database was
     // updated correctly
     setTimeout(() => {
       chai
@@ -55,7 +55,6 @@ describe('Twitter Account Message Broker', () => {
       .set('Accept', 'application/json')
       .end((err, res) => {
         const responseContents = JSON.parse(res.text)
-        
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(responseContents.concha_user_id).to.equal('507f1f77bcf86cd799439011')
@@ -66,6 +65,8 @@ describe('Twitter Account Message Broker', () => {
         expect(responseContents.no_of_retweets_received).to.equal(50)
         done()
       })
-    }, 1000);
+    }, 2000)
   })
 })
+/* eslint-enable handle-callback-err */
+/* eslint-enable no-unused-expressions */

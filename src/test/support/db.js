@@ -16,7 +16,6 @@ const connect = () => {
       }
       return resolve()
     })
-
   })
 }
 
@@ -24,9 +23,9 @@ const clean = () => {
   return new Promise((resolve, reject) => {
     // Clear down the test database
     for (var i in mongoose.connection.collections) {
-      mongoose.connection.collections[i].remove(function() {});
+      mongoose.connection.collections[i].remove(function () {})
     }
-    return resolve();
+    return resolve()
   })
 }
 
@@ -45,7 +44,6 @@ const populate = () => {
       }
       return resolve()
     })
-
   })
 }
 
