@@ -11,11 +11,13 @@ chai.use(chaiHttp)
 describe('Twitter Account API Endpoint', () => {
 
   before(async () => {
-    await testDb.setup()
+    await testDb.connect()
+    await testDb.clean()
+    await testDb.populate()
   })
 
   after(async () => {
-    await testDb.tearDown()
+    await testDb.close()
   })
 
   it ('Should return 409 if user Twitter account is already linked', (done) => {

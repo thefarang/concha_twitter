@@ -58,6 +58,22 @@ const TwitterDataSchema = new Schema({
     type: Date,
     required: true,
     default: '1970-01-01T00:00:00.000Z'
+  },
+
+  no_of_followers: {
+    type: Number
+  },
+  no_of_tweets: {
+    type: Number
+  },
+  no_of_likes_received: {
+    type: Number
+  },
+  no_of_replies_received: {
+    type: Number
+  },
+  no_of_retweets_received: {
+    type: Number
   }
 }, {
   collection: 'twitter'

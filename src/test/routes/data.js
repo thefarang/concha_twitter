@@ -14,11 +14,13 @@ const conchaUserKnownId = '507f1f77bcf86cd799439011'
 describe('Twitter Data API Endpoint', () => {
   
   before(async () => {
-    await testDb.setup()
+    await testDb.connect()
+    await testDb.clean()
+    await testDb.populate()
   })
 
   after(async () => {
-    await testDb.tearDown()
+    await testDb.close()
   })
 
   it ('Should return 404 if user Twitter data does not exist', (done) => {
