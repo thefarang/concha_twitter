@@ -1,28 +1,5 @@
 # Twitter Integration Microservice for the Concha Distributed Application
 
-[![Build Status](https://travis-ci.org/thefarang/concha_twitter.svg)](https://travis-ci.org/thefarang/concha_twitter) [![Coverage Status](https://coveralls.io/repos/github/thefarang/concha_twitter/badge.svg)](https://coveralls.io/github/thefarang/concha_twitter)
+[![Build Status](https://travis-ci.org/thefarang/concha_twitter.svg)](https://travis-ci.org/thefarang/concha_twitter) [![Coverage Status](https://coveralls.io/repos/github/thefarang/concha_twitter/badge.svg)](https://coveralls.io/github/thefarang/concha_twitter) [![Docker Pulls](https://img.shields.io/docker/pulls/thefarang/concha_twitter.svg)](https://hub.docker.com/r/thefarang/concha_twitter/)
 
-## Package Locking
-All packages are installed at a specific version, to ensure an exact, reproducible `node_modules` tree. This is achieved in two ways. Firstly, the `package.json` lists directly dependent packages at their exact version number. **No carets or tildes**. Secondly, the repo includes an `npm-shrinkwrap.json` file which additionally lists all **deeply-nested** dependent packages with their corresponding version numbers. When `npm install` is executed, the `npm-shrinkwrap.json` file will be referenced to ensure all packages are installed at the versions specified.
-
-
-## Style Guide
-All code syntax should be written in the configuration-less [JavaScript Standard Style](https://standardjs.com). New code will not be merged into `develop` unless it passes the linting rules defined by this style. Code linting can be manually performed as follows:
-
-```
-$ npm run lint  
-```
-
-If errors are found by the linter, you can fix them as follows:
-
-```
-$ npm run fix-style  
-```
-
-
-## Testing
-Code should be developed only after the test-cases for the code have been written. Unit tests should be added to the `tests` directory, and can be as follows:
-
-```
-$ npm run test  
-```
+Documentation for this microservice is available on the [wiki](https://github.com/thefarang/concha_infrastructure/wiki/Concha-Distributed-Application)
