@@ -6,6 +6,7 @@
 // @todo
 // Include validation middleware on all incoming user data
 
+const log = require('./lib/log')
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -63,6 +64,7 @@ app.use((req, res, next) => {
   if ((acceptHeader === undefined) || (acceptHeader.indexOf('application/json') === -1)) {
     const err = new Error()
     err.status = 406
+    log.info({ err: err }, 'Client does not accept JSON responses')
     return next(err)
   }
   next()
@@ -78,6 +80,7 @@ app.use('/api/v1/account', account)
 app.use((req, res, next) => {
   const err = new Error()
   err.status = 404
+  log.info({ err: err }, 'An unknown route has been requested')
   next(err)
 })
 
