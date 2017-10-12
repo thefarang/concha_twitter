@@ -11,7 +11,7 @@ services:
     # Container name should match the name given in the mongo connection string
     # Refactor into environment variables, then reinclude the container name.
     # container_name: mongo_concha_twitter
-    image: mongo:3.0.15-wheezy
+    image: mvertes/alpine-mongo:3.4.9-0
     ports:
       - 27017
     volumes:
@@ -22,7 +22,7 @@ services:
     # Container name should match the name given in the mongo connection string
     # Refactor into environment variables, then reinclude the container name.
     # container_name: rabbitmq_concha_twitter
-    image: rabbitmq:3.6.12
+    image: rabbitmq:3.6.12-alpine
     ports:
       - 5672:5672
     volumes:
@@ -34,6 +34,8 @@ services:
     # Refactor into environment variables, then reinclude the container name.
     # container_name: concha_twitter
     build: .
+    environment:
+      - NODE_CONFIG_DIR=/app/src/config
     volumes:
       # Make the following available to docker so that changes made on the host
       # are immediately available inside the docker container.

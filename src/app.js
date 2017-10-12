@@ -10,15 +10,14 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const amqp = require('amqplib/callback_api')
+const config = require('config')
 
 const updateAccount = require('./lib/update-account')
 const data = require('./routes/data')
 const account = require('./routes/account')
 
-// Database connection
-// @todo replace this with config
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://mongo:27017/local', {
+mongoose.connect(config.get('mongoConn'), {
   useMongoClient: true
 })
 
@@ -31,9 +30,7 @@ process.on('SIGINT', () => {
 })
 
 // @todo - continue page 2 of the tutorial for persistance
-// Message broker connection
-// @todo config
-amqp.connect('amqp://rabbitmq', (err, conn) => {
+amqp.connect(config.get('messageBroker'), (err, conn) => {
   if (err) {
     // @todo add logging here.
     process.exit(0)
@@ -44,8 +41,7 @@ amqp.connect('amqp://rabbitmq', (err, conn) => {
       // @todo add logging here.
       process.exit(0)
     }
-    // @todo config
-    const q = 'twitter_receive'
+    const q = config.get('incomingQueue')
 
     // @todo
     // Make durable (and update the test/lib/update-account.js file too)

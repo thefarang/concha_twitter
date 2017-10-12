@@ -1,0 +1,5 @@
+{
+  "mongoConn": "mongodb://mongo:27017/local",
+  "messageBroker": "amqp://rabbitmq",
+  "incomingQueue": "twitter_receive"
+}
