@@ -1,11 +1,10 @@
 'use strict'
 
+const config = require('config')
 const amqp = require('amqplib/callback_api')
 
-// @todo
-// Config
-const messagebroker = 'amqp://rabbitmq'
-const q = 'twitter_receive'
+const messagebroker = config.get('messageBroker')
+const q = config.get('incomingQueue')
 
 const connect = () => {
   return new Promise((resolve, reject) => {

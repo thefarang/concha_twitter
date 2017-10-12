@@ -1,5 +1,6 @@
 'use strict'
 
+const config = require('config')
 const mongoose = require('mongoose')
 const TwitterData = require('../../models/twitter-data')
 
@@ -10,7 +11,7 @@ const ObjectId = mongoose.Types.ObjectId
 const connect = () => {
   return new Promise((resolve, reject) => {
     mongoose.Promise = global.Promise
-    mongoose.connect('mongodb://mongo:27017/local', { useMongoClient: true }, (err) => {
+    mongoose.connect(config.get('mongoConn'), { useMongoClient: true }, (err) => {
       if (err) {
         return reject(err)
       }

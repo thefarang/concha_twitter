@@ -1,12 +1,13 @@
 'use strict'
 
+const config = require('config')
 const mongoose = require('mongoose')
 let TwitterData = require('../models/twitter-data')
 
 const ObjectId = mongoose.Types.ObjectId
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://mongo:27017/local')  // @todo test database?
+mongoose.connect(config.get('mongoConn')) // @todo test database?
 
 new Promise((resolve, reject) => {
   TwitterData.find().remove((err) => {
