@@ -1,5 +1,6 @@
 'use strict'
 
+const log = require('../lib/log')
 const mongoose = require('mongoose')
 const TwitterData = require('../models/twitter-data')
 
@@ -11,17 +12,21 @@ const updateAccount = (data) => {
   },
   (err, document) => {
     if (err) {
-      // @todo
-      // Log the error and return
-      return
+      log.info({
+        err: err,
+        conchaUserId: data.concha_user_id
+      }, 'An error occurred locating the Twitter data document')
+      return err
     }
 
     if (document === null) {
-      // @todo
-      // Log the error and return
       const err = new Error()
       err.status = 404
-      return
+      log.info({
+        err: err,
+        conchaUserId: data.concha_user_id
+      }, 'The Twitter data document was not found')
+      return err
     }
 
     document.no_of_followers = data.no_of_followers
@@ -32,8 +37,11 @@ const updateAccount = (data) => {
 
     document.save((err) => {
       if (err) {
-        // @todo
-        // Log the error and return
+        log.info({
+          err: err,
+          document: document
+        }, 'An error occurred saving the Twitter data document')
+        return err
       }
     })
   })

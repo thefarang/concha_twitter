@@ -1,5 +1,6 @@
 'use strict'
 
+const log = require('../lib/log')
 const config = require('config')
 const mongoose = require('mongoose')
 let TwitterData = require('../models/twitter-data')
@@ -7,11 +8,12 @@ let TwitterData = require('../models/twitter-data')
 const ObjectId = mongoose.Types.ObjectId
 
 mongoose.Promise = global.Promise
-mongoose.connect(config.get('mongoConn')) // @todo test database?
+mongoose.connect(config.get('mongoConn')) // @todo use test database?
 
 new Promise((resolve, reject) => {
   TwitterData.find().remove((err) => {
     if (err) {
+      log.info({ err: err }, 'Unable to find and remove existing TwitterData objects')
       return reject(err)
     }
     resolve()
@@ -29,11 +31,14 @@ new Promise((resolve, reject) => {
     twitterData.age = new Date('1970-01-01T00:00:00Z')
     twitterData.save((err) => {
       if (err) {
+        log.info({
+          err: err,
+          twitterData: twitterData
+        }, 'An error occurred saving the TwitterData object')
         return reject(err)
       }
 
-      console.log('Populated Twitter Data') // 59d1f5e08c75f30072dfcb5e
-      console.log(twitterData._id)
+      log.info({ twitterData: twitterData }, 'Saved TwitterData object')
       resolve()
     })
   })
@@ -42,7 +47,6 @@ new Promise((resolve, reject) => {
   process.exit(0)
 })
 .catch((err) => {
-  console.log('An error occurred populating the twitter table.')
-  console.log(err)
+  log.info({ err: err }, 'An error occurred populating the TwitterData collection. Exiting...')
   process.exit(0)
 })

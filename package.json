@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "./node_modules/.bin/standard --verbose \"src/**/*.js\"",
-    "fix-style": "./node_modules/.bin/standard --fix \"src/**/*.js\"",
+    "fix-lint": "./node_modules/.bin/standard --fix \"src/**/*.js\"",
     "debug": "./node_modules/.bin/nodemon ./src/bin/startup.js",
     "test": "./node_modules/.bin/mocha --timeout 10000 \"src/test/routes/*.js\" \"src/test/lib/*.js\"",
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --timeout 10000 \"src/test/routes/*.js\" \"src/test/lib/*.js\"",
@@ -15,7 +15,8 @@
     "express": "4.15.5",
     "mongoose": "4.11.12",
     "amqplib": "0.5.1",
-    "config": "1.26.2"
+    "config": "1.26.2",
+    "bunyan": "1.8.12"
   },
   "devDependencies": {
     "nodemon": "1.12.1",
