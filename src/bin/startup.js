@@ -4,9 +4,7 @@ const log = require('../lib/log')
 const app = require('../app')
 const http = require('http')
 
-/**
- * Normalize a port into a number, string, or false.
- */
+// Normalize a port into a number, string, or false.
 const normalizePort = (val) => {
   const port = parseInt(val, 10)
 
@@ -16,16 +14,13 @@ const normalizePort = (val) => {
   }
 
   if (port >= 0) {
-    // port number
     return port
   }
 
   return false
 }
 
-/**
- * Event listener for HTTP server "error" event.
- */
+// Event listener for HTTP server "error" event.
 const onError = (error) => {
   if (error.syscall !== 'listen') {
     throw error
@@ -48,11 +43,9 @@ const onError = (error) => {
   }
 }
 
-/**
- * @todo
- * Add logging
- * Event listener for HTTP server "listening" event.
- */
+// @todo
+// Add logging
+// Event listener for HTTP server "listening" event.
 const onListening = () => {
   /*
   const addr = server.address()
