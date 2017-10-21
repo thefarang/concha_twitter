@@ -1,7 +1,7 @@
 'use strict'
 
 const log = require('../../log')
-const twitter = require('../../../models/api/twitter')
+const twitter = require('../../database/models/api/twitter')
 const express = require('express')
 
 const router = express.Router()

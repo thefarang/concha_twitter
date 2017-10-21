@@ -2,7 +2,7 @@
 
 const config = require('config')
 const mongoose = require('mongoose')
-const Twitter = require('../../models/schema/twitter')
+const Twitter = require('../../services/database/models/schema/twitter')
 
 const ObjectId = mongoose.Types.ObjectId
 

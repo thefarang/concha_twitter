@@ -1,6 +1,6 @@
 'use strict'
 
-const log = require('../../services/log')
+const log = require('../../../log')
 const mongoose = require('mongoose')
 const Twitter = require('../schema/twitter')
 

@@ -1,7 +1,7 @@
 'use strict'
 
 const log = require('../services/log')
-const twitter = require('../models/api/twitter')
+const twitter = require('../services/database/models/api/twitter')
 
 const updateAccount = async (data) => {
   try {

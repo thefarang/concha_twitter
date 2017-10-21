@@ -1,12 +1,12 @@
 'use strict'
 
 const config = require('config')
-const log = require('./log')
+const log = require('../log')
 const mongoose = require('mongoose')
 
 let isConnected = false
 
-const bootstrap = () => {
+const connect = () => {
   if (!isConnected) {
     mongoose.Promise = global.Promise
     mongoose.connect(config.get('mongoConn'), {
@@ -24,6 +24,6 @@ const disconnect = () => {
 }
 
 module.exports = {
-  bootstrap,
+  connect,
   disconnect
 }

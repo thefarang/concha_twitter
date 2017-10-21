@@ -2,7 +2,7 @@
 
 const log = require('../../log')
 const express = require('express')
-const twitter = require('../../../models/api/twitter')
+const twitter = require('../../database/models/api/twitter')
 
 const router = express.Router()
 
