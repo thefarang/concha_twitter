@@ -3,9 +3,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const TwitterDataSchema = new Schema({
-  // _id will be created by default
-
+const TwitterSchema = new Schema({
   // Links to the concha User account
   concha_user_id: {
     type: Schema.ObjectId,
@@ -80,6 +78,6 @@ const TwitterDataSchema = new Schema({
 })
 
 // Generate a Model from the Schema.
-let TwitterData = mongoose.model('TwitterData', TwitterDataSchema)
+let Twitter = mongoose.model('Twitter', TwitterSchema)
 
-module.exports = TwitterData
+module.exports = Twitter

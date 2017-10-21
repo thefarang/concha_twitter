@@ -3,7 +3,7 @@
 const log = require('../lib/log')
 const config = require('config')
 const mongoose = require('mongoose')
-let TwitterData = require('../models/twitter-data')
+let TwitterData = require('../models/schema/twitter')
 
 const ObjectId = mongoose.Types.ObjectId
 

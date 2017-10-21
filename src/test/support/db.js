@@ -2,7 +2,7 @@
 
 const config = require('config')
 const mongoose = require('mongoose')
-const TwitterData = require('../../models/twitter-data')
+const Twitter = require('../../models/schema/twitter')
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -32,7 +32,7 @@ const clean = () => {
 
 const populate = () => {
   return new Promise((resolve, reject) => {
-    const twitterData = new TwitterData()
+    const twitterData = new Twitter()
     twitterData.concha_user_id = new ObjectId('507f1f77bcf86cd799439011')
     twitterData.twitter_id = '12345678901234567890'
     twitterData.oauth_token = '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&'
