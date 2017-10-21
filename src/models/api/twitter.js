@@ -1,6 +1,6 @@
 'use strict'
 
-const log = require('../../lib/log')
+const log = require('../../services/log')
 const mongoose = require('mongoose')
 const Twitter = require('../schema/twitter')
 
@@ -26,7 +26,6 @@ const findOne = (conchaUserId) => {
 
 const save = (document) => {
   return new Promise((resolve, reject) => {
-
     let twitterDoc = null
     if (!(document instanceof Twitter)) {
       twitterDoc = new Twitter()

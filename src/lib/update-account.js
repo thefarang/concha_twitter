@@ -1,6 +1,6 @@
 'use strict'
 
-const log = require('./log')
+const log = require('../services/log')
 const twitter = require('../models/api/twitter')
 
 const updateAccount = async (data) => {
@@ -22,9 +22,9 @@ const updateAccount = async (data) => {
     twitterDoc.no_of_retweets_received = data.no_of_retweets_received
     await twitter.save(twitterDoc)
   } catch (err) {
-    log.info({ 
-      err: err, 
-      conchaUserId: data.concha_user_id 
+    log.info({
+      err: err,
+      conchaUserId: data.concha_user_id
     }, 'An error occurred updating the Twitter document')
     throw err
   }

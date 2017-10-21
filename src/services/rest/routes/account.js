@@ -1,13 +1,10 @@
 'use strict'
 
-const log = require('../lib/log')
-
-// @todo
-// This should be extracted to the web-framework.js
+const log = require('../../log')
 const express = require('express')
-const router = express.Router()
+const twitter = require('../../../models/api/twitter')
 
-const twitter = require('../models/api/twitter')
+const router = express.Router()
 
 // Links the Concha user's account to Twitter
 router.post('/link', async (req, res, next) => {

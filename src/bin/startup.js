@@ -1,6 +1,6 @@
 'use strict'
 
-const log = require('../lib/log')
+const log = require('../services/log')
 const app = require('../app')
 const http = require('http')
 

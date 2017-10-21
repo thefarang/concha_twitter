@@ -3,8 +3,8 @@
 const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
-const testDb = require('../support/db')
-const app = require('../../app')
+const testDb = require('../../../support/db')
+const app = require('../../../../app')
 
 chai.use(chaiHttp)
 

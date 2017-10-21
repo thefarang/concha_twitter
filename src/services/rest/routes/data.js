@@ -1,26 +1,19 @@
 'use strict'
 
-const log = require('../lib/log')
-
-// @todo
-// This should be extracted to the web-framework.js
+const log = require('../../log')
+const twitter = require('../../../models/api/twitter')
 const express = require('express')
-const router = express.Router()
 
-const twitter = require('../models/api/twitter')
+const router = express.Router()
 
 router.get('/:concha_user_id', async (req, res, next) => {
   try {
     const twitterDoc = await twitter.findOne(req.params.concha_user_id)
 
     if (twitterDoc === null) {
-      const err = new Error()
+      const err = new Error('Could not locate the users Twitter document')
       err.status = 404
-      log.info({
-        err: err,
-        conchaUserId: req.params.concha_user_id
-      }, 'Could not locate the users Twitter document')
-      return next(err)
+      throw err
     }
 
     res.json(twitterDoc)
@@ -38,13 +31,9 @@ router.get('/age/:concha_user_id', async (req, res, next) => {
     const twitterDoc = await twitter.findOne(req.params.concha_user_id)
 
     if (twitterDoc === null) {
-      const err = new Error()
+      const err = new Error('Unable to find the age of the users Twitter document')
       err.status = 404
-      log.info({
-        err: err,
-        conchaUserId: req.params.concha_user_id
-      }, 'Unable to find the age of the users Twitter document')
-      return next(err)
+      throw err
     }
 
     res.json({ age: twitterDoc.age })

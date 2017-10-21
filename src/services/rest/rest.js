@@ -4,11 +4,11 @@
 // Does not yet support HATEOS
 // Include validation middleware on all incoming user data
 
-const log = require('./log')
+const log = require('../log')
 const express = require('express')
 const bodyParser = require('body-parser')
-const data = require('../routes/data')
-const account = require('../routes/account')
+const data = require('./routes/data')
+const account = require('./routes/account')
 
 const bootstrap = () => {
   const webApp = express()

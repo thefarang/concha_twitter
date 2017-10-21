@@ -6,8 +6,8 @@
     "lint": "./node_modules/.bin/standard --verbose \"src/**/*.js\"",
     "fix-lint": "./node_modules/.bin/standard --fix \"src/**/*.js\"",
     "debug": "./node_modules/.bin/nodemon ./src/bin/startup.js",
-    "test": "./node_modules/.bin/mocha --timeout 10000 \"src/test/routes/*.js\" \"src/test/lib/*.js\"",
-    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --timeout 10000 \"src/test/routes/*.js\" \"src/test/lib/*.js\"",
+    "test": "./node_modules/.bin/mocha --timeout 10000 \"src/test/services/**/*.js\" \"src/test/lib/*.js\"",
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --timeout 10000 \"src/test/services/**/*.js\" \"src/test/lib/*.js\"",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "dependencies": {
