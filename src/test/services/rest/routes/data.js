@@ -3,7 +3,7 @@
 const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
-const testDb = require('../../../support/db')
+const dbService = require('../../../support/database/service')
 const app = require('../../../../app')
 
 chai.use(chaiHttp)
@@ -15,13 +15,13 @@ const conchaUserKnownId = '507f1f77bcf86cd799439011'
 /* eslint-disable handle-callback-err */
 describe('Twitter Data API Endpoint', () => {
   before(async () => {
-    await testDb.connect()
-    await testDb.clean()
-    await testDb.populate()
+    await dbService.connect()
+    await dbService.clean()
+    await dbService.populate()
   })
 
   after(async () => {
-    await testDb.close()
+    await dbService.close()
   })
 
   it('Should return 404 if user Twitter data does not exist', (done) => {

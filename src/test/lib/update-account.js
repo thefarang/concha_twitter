@@ -3,8 +3,7 @@
 const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
-
-const testDb = require('../support/db')
+const dbService = require('../support/database/service')
 const testMb = require('../support/mb')
 const app = require('../../app')
 
@@ -19,9 +18,9 @@ const conchaUserId = '507f1f77bcf86cd799439011'
 /* eslint-disable handle-callback-err */
 describe('Twitter Account Message Broker', () => {
   before(async () => {
-    await testDb.connect()
-    await testDb.clean()
-    await testDb.populate()
+    await dbService.connect()
+    await dbService.clean()
+    await dbService.populate()
 
     const conn = await testMb.connect()
     mbChannel = await testMb.createChannel(conn)
@@ -30,7 +29,7 @@ describe('Twitter Account Message Broker', () => {
   })
 
   after(async () => {
-    await testDb.close()
+    await dbService.disconnect()
   })
 
   it('Should correctly trigger an update of the database', (done) => {

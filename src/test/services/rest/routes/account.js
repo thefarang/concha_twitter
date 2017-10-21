@@ -3,7 +3,7 @@
 const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
-const testDb = require('../../../support/db')
+const dbService = require('../../../support/database/service')
 const app = require('../../../../app')
 
 chai.use(chaiHttp)
@@ -12,13 +12,13 @@ chai.use(chaiHttp)
 /* eslint-disable handle-callback-err */
 describe('Twitter Account API Endpoint', () => {
   before(async () => {
-    await testDb.connect()
-    await testDb.clean()
-    await testDb.populate()
+    await dbService.connect()
+    await dbService.clean()
+    await dbService.populate()
   })
 
   after(async () => {
-    await testDb.close()
+    await dbService.disconnect()
   })
 
   it('Should return 409 if user Twitter account is already linked', (done) => {

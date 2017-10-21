@@ -1,15 +1,15 @@
 'use strict'
 
 // Bootstrap the database, message broker and rest services
-const database = require('./services/database/database')
+const dbService = require('./services/database/service')
 const messageBroker = require('./services/message-broker')
-const rest = require('./services/rest/rest')
+const restService = require('./services/rest/service')
 const updateAccount = require('./lib/update-account')
 
-database.connect()
-process.on('SIGINT', () => database.disconnect())
+dbService.connect()
+process.on('SIGINT', () => dbService.disconnect())
 
 messageBroker.bootstrap(updateAccount)
 
-const restApp = rest.bootstrap()
-module.exports = restApp
+const restfulApp = restService.bootstrap()
+module.exports = restfulApp

@@ -1,23 +1,17 @@
 'use strict'
 
-const config = require('config')
+const dbService = require('../../../services/database/service')
+const Twitter = require('../../../services/database/models/schema/twitter')
 const mongoose = require('mongoose')
-const Twitter = require('../../services/database/models/schema/twitter')
 
 const ObjectId = mongoose.Types.ObjectId
 
-// @todo
-// Use the test database and set in config
 const connect = () => {
-  return new Promise((resolve, reject) => {
-    mongoose.Promise = global.Promise
-    mongoose.connect(config.get('mongoConn'), { useMongoClient: true }, (err) => {
-      if (err) {
-        return reject(err)
-      }
-      return resolve()
-    })
-  })
+  dbService.connect()
+}
+
+const disconnect = () => {
+  dbService.disconnect()
 }
 
 const clean = () => {
@@ -48,17 +42,9 @@ const populate = () => {
   })
 }
 
-const close = () => {
-  return new Promise((resolve, reject) => {
-    mongoose.connection.close(() => {
-      return resolve()
-    })
-  })
-}
-
 module.exports = {
   connect,
   clean,
   populate,
-  close
+  disconnect
 }
