@@ -1,8 +1,13 @@
 'use strict'
 
 const log = require('../services/log')
-const app = require('../app')
 const http = require('http')
+
+const dbService = require('../services/database/service')
+const mbService = require('../services/message-broker')
+const restService = require('../services/rest/service')
+
+const app = require('../app')(dbService, mbService, restService)
 
 // Normalize a port into a number, string, or false.
 const normalizePort = (val) => {
@@ -58,6 +63,7 @@ const onListening = () => {
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '80')
 app.set('port', port)
+
 const server = http.createServer(app)
 server.listen(port)
 server.on('error', onError)

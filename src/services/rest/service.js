@@ -10,11 +10,14 @@ const bodyParser = require('body-parser')
 const data = require('./routes/data')
 const account = require('./routes/account')
 
-const bootstrap = () => {
-  const webApp = express()
+const bootstrap = (dbService, mbService) => {
+  const restApp = express()
+
+  restApp.set('dbService', dbService)
+  restApp.set('mbService', mbService)
 
   // Middleware to check each client request specifically accepts JSON responses.
-  webApp.use((req, res, next) => {
+  restApp.use((req, res, next) => {
     const acceptHeader = req.get('accept')
     if ((acceptHeader === undefined) || (acceptHeader.indexOf('application/json') === -1)) {
       const err = new Error()
@@ -25,14 +28,14 @@ const bootstrap = () => {
     next()
   })
 
-  webApp.use(bodyParser.json())
-  webApp.use(bodyParser.urlencoded({ extended: false }))
+  restApp.use(bodyParser.json())
+  restApp.use(bodyParser.urlencoded({ extended: false }))
 
-  webApp.use('/api/v1/data', data)
-  webApp.use('/api/v1/account', account)
+  restApp.use('/api/v1/data', data)
+  restApp.use('/api/v1/account', account)
 
   // Default 404 handler, called when no routes match the requested route.
-  webApp.use((req, res, next) => {
+  restApp.use((req, res, next) => {
     const err = new Error()
     err.status = 404
     log.info({ err: err }, 'An unknown route has been requested')
@@ -40,13 +43,13 @@ const bootstrap = () => {
   })
 
   // Error handler.
-  webApp.use((err, req, res, next) => {
+  restApp.use((err, req, res, next) => {
     res.set('Cache-Control', 'private, max-age=0, no-cache')
     res.status(err.status || 500)
     res.json()
   })
 
-  return webApp
+  return restApp
 }
 
 module.exports = {

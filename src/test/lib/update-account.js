@@ -3,37 +3,35 @@
 const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
-const dbService = require('../support/database/service')
-const testMb = require('../support/mb')
-const app = require('../../app')
+
+const dbService = require('../mocks/database')
+const mbService = require('../mocks/message-broker')
+const restService = require('../../services/rest/service')
+const app = require('../../app')(dbService, mbService, restService)
 
 chai.use(chaiHttp)
-
-// Message broker channel and queue
-let mbChannel = null
-let mbQueue = null
 const conchaUserId = '507f1f77bcf86cd799439011'
 
 /* eslint-disable no-unused-expressions */
 /* eslint-disable handle-callback-err */
 describe('Twitter Account Message Broker', () => {
-  before(async () => {
-    await dbService.connect()
-    await dbService.clean()
-    await dbService.populate()
-
-    const conn = await testMb.connect()
-    mbChannel = await testMb.createChannel(conn)
-    mbQueue = await testMb.assertQueue(mbChannel)
-    mbQueue = await testMb.cleanQueue(mbChannel)
-  })
-
-  after(async () => {
-    await dbService.disconnect()
+  beforeEach(() => { 
+    dbService.removeAll()
+    mbService.purgeQueue()
   })
 
   it('Should correctly trigger an update of the database', (done) => {
-    // First create a payload and publish an update to the message broker.
+    // Create a document in the mock database
+    dbService.upsert({
+      concha_user_id: conchaUserId,
+      twitter_id: '12345678901234567890',
+      oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',
+      oauth_secret: 'PbKfYqSryyeKDWz4ebtY3o5ogNLG11WJuZBc9fQrQo',
+      screenname: 'concha_app',
+      url: 'https://twitter.com/concha_app'
+    })
+
+    // Create a payload with which to update the document
     const payload = JSON.stringify({
       concha_user_id: conchaUserId,
       no_of_followers: 100,
@@ -42,13 +40,12 @@ describe('Twitter Account Message Broker', () => {
       no_of_replies_received: 5,
       no_of_retweets_received: 50
     })
-    mbChannel.sendToQueue(mbQueue, Buffer.from(payload, 'UTF-8'), { persistent: false })
 
-    // Wait a couple of seconds to allow the message to be picked up off
-    // the queue and processed, then check to ensure the database was
-    // updated correctly
-    setTimeout(() => {
-      chai
+    // Publish the payload to the message broker.
+    mbService.sendToQueue(Buffer.from(payload, 'UTF-8'))
+
+    // Check to ensure the database was updated correctly
+    chai
       .request(app)
       .get(`/api/v1/data/${conchaUserId}`)
       .set('Accept', 'application/json')
@@ -64,7 +61,6 @@ describe('Twitter Account Message Broker', () => {
         expect(responseContents.no_of_retweets_received).to.equal(50)
         done()
       })
-    }, 2000)
   })
 })
 /* eslint-enable handle-callback-err */

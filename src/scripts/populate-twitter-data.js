@@ -29,7 +29,7 @@ new Promise((resolve, reject) => {
     twitterData.screenname = '@concha_app'
     twitterData.url = 'https://twitter.com/concha_app'
     twitterData.age = new Date('1970-01-01T00:00:00Z')
-    twitterData.save((err) => {
+    twitterData.upsert((err) => {
       if (err) {
         log.info({
           err: err,

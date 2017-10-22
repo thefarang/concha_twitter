@@ -2,7 +2,6 @@
 
 const log = require('../../log')
 const express = require('express')
-const twitter = require('../../database/models/api/twitter')
 
 const router = express.Router()
 
@@ -18,44 +17,48 @@ router.post('/link', async (req, res, next) => {
   }
 
   try {
-    await twitter.save(twitterDoc)
-  } catch (err) {
-    // Check for duplicates and mark as 409
-    if (err.code && err.code === 11000) {
-      err.status = 409
-    }
+    // Check for duplicates
+    const existingTwitterDoc = await req.app.get('dbService').findOne(twitterDoc.concha_user_id)
+    if (existingTwitterDoc !== null) {
+      // Mark duplicates as a 409 error
+      log.info({
+        twitterDoc: twitterDoc
+      }, 'The users twitter account is already linked')
 
+      const err = new Error()
+      err.status = 409
+      return next(err)
+    }
+    return res.json()
+  } catch (err) {
     log.info({
       err: err,
       twitterDoc: twitterDoc
     }, 'An error occurred whilst linking the users Twitter account')
-
     return next(err)
   }
-
-  return res.json()
 })
 
 // Unlinks the Concha user's account from their Twitter account
 router.delete('/link/:concha_user_id', async (req, res, next) => {
-  let twitterDoc = null
   try {
-    twitterDoc = await twitter.findOne(req.params.concha_user_id)
-
+    const twitterDoc = await req.app.get('dbService').findOne(req.params.concha_user_id)
     if (twitterDoc === null) {
-      const err = new Error('Unable to find the users Twitter document')
-      err.status = 404
-      throw err
+      log.info({
+        conchaUserId: req.params.concha_user_id
+      }, 'Unable to find the users Twitter document prior to deletion')
+
+      // Flow through to 404 handler
+      return next()
     }
 
-    await twitter.remove(twitterDoc)
+    await req.app.get('dbService').remove(req.params.concha_user_id)
     res.status(204)
     res.json()
   } catch (err) {
     log.info({
       err: err,
-      conchaUserId: req.params.concha_user_id,
-      twitterDoc: twitterDoc
+      conchaUserId: req.params.concha_user_id
     }, 'An error occurred whilst unlinking the users Twitter account')
     return next(err)
   }

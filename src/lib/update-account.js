@@ -1,11 +1,10 @@
 'use strict'
 
 const log = require('../services/log')
-const twitter = require('../services/database/models/api/twitter')
 
-const updateAccount = async (data) => {
+const updateAccount = async (data, dbService) => {
   try {
-    const twitterDoc = await twitter.findOne(data.concha_user_id)
+    const twitterDoc = await dbService.findOne(data.concha_user_id)
 
     if (twitterDoc === null) {
       // @todo
@@ -20,7 +19,7 @@ const updateAccount = async (data) => {
     twitterDoc.no_of_likes_received = data.no_of_likes_received
     twitterDoc.no_of_replies_received = data.no_of_replies_received
     twitterDoc.no_of_retweets_received = data.no_of_retweets_received
-    await twitter.save(twitterDoc)
+    await dbService.upsert(twitterDoc)
   } catch (err) {
     log.info({
       err: err,
