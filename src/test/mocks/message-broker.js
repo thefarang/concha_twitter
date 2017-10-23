@@ -1,18 +1,16 @@
 'use strict'
 
-let consumeAction = null
-let dbService = null
+let twitter = null
 
-const bootstrap = async (consumeActionIn, dbServiceIn) => {
-  consumeAction = consumeActionIn
-  dbService = dbServiceIn
+const bootstrap = async (twitterIn) => {
+  twitter = twitterIn
 }
 
 const purgeQueue = () => {
 }
 
 const sendToQueue = (payload) => {
-  consumeAction(JSON.parse(payload.toString()), dbService)
+  twitter.update(JSON.parse(payload.toString()))
 }
 
 module.exports = {

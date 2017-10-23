@@ -1,11 +1,15 @@
 'use strict'
 
-const updateAccount = require('./lib/update-account')
+const Twitter = require('./lib/twitter')
 
 module.exports = (dbService, mbService, restService) => {
   const app = restService.bootstrap(dbService, mbService)
+
   dbService.connect()
   process.on('SIGINT', () => dbService.disconnect())
-  mbService.bootstrap(updateAccount, dbService)
+
+  const twitter = new Twitter(dbService)
+
+  mbService.bootstrap(twitter)
   return app
 }
