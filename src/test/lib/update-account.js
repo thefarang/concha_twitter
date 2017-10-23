@@ -22,7 +22,7 @@ describe('Twitter Account Message Broker', () => {
 
   it('Should correctly trigger an update of the database', (done) => {
     // Create a document in the mock database
-    dbService.upsert({
+    dbService.save({
       concha_user_id: conchaUserId,
       twitter_id: '12345678901234567890',
       oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',

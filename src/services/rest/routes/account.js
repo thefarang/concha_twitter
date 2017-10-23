@@ -17,10 +17,10 @@ router.post('/link', async (req, res, next) => {
   }
 
   try {
-    // Check for duplicates
+    // Check to see if a link already exists
     const existingTwitterDoc = await req.app.get('dbService').findOne(twitterDoc.concha_user_id)
     if (existingTwitterDoc !== null) {
-      // Mark duplicates as a 409 error
+      // Mark duplicate as a 409 error
       log.info({
         twitterDoc: twitterDoc
       }, 'The users twitter account is already linked')
@@ -29,6 +29,9 @@ router.post('/link', async (req, res, next) => {
       err.status = 409
       return next(err)
     }
+
+    // Save the new Twitter link
+    await req.app.get('dbService').save(twitterDoc)
     return res.json()
   } catch (err) {
     log.info({

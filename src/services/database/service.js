@@ -39,7 +39,11 @@ const findOne = (conchaUserId) => {
         return reject(err)
       }
 
-      // Transfor the Twitter schema object into a generic JSON object
+      if (document === null) {
+        return resolve(null)
+      }
+
+      // Transform the Twitter schema object into a generic JSON object
       const twitterDoc = {
         concha_user_id: conchaUserId,
         twitter_id: document.twitter_id,
@@ -59,33 +63,14 @@ const findOne = (conchaUserId) => {
   })
 }
 
-const upsert = async (document) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const twitterDoc = await findOne(document.concha_user_id)
-      return resolve(twitterDoc)
-    } catch (err) {
-      log.info({
-        err: err,
-        conchaUserId: document.concha_user_id
-      }, 'An error occurred finding the Twitter document prior to updating it')
-      return reject(err)
-    }
-  })
-  .then((twitterDoc) => {
-    return new Promise((resolve, reject) => {
-      // Update properties
-      twitterDoc.screenname = document.screenname
-      twitterDoc.url = document.url
-      twitterDoc.age = document.age // @todo HERE
-      twitterDoc.no_of_followers = document.no_of_followers
-      twitterDoc.no_of_tweets = document.no_of_tweets
-      twitterDoc.no_of_likes_received = document.no_of_likes_received
-      twitterDoc.no_of_replies_received = document.no_of_replies_received
-      twitterDoc.no_of_retweets_received = document.no_of_retweets_received
-
-      // Save
-      twitterDoc.save((err) => {
+const save = async (document) => {
+  return new Promise((resolve, reject) => {
+    Twitter.findOneAndUpdate(
+      { concha_user_id: document.concha_user_id }, 
+      document, 
+      { upsert: true }, 
+      (err) => {
+        // Here
         if (err) {
           log.info({
             err: err,
@@ -93,15 +78,14 @@ const upsert = async (document) => {
           }, 'An error occurred saving the Twitter document')
           return reject(err)
         }
-        return resolve()
+        return resolve(document)
       })
-    })
   })
 }
 
 const remove = (conchaUserId) => {
   return new Promise((resolve, reject) => {
-    Twitter.remove({concha_user_id: conchaUserId}, (err) => {
+    Twitter.remove({ concha_user_id: conchaUserId }, (err) => {
       if (err) {
         log.info({
           err: err,
@@ -118,6 +102,6 @@ module.exports = {
   connect,
   disconnect,
   findOne,
-  upsert,
+  save,
   remove
 }

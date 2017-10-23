@@ -38,7 +38,7 @@ const bootstrap = (dbService, mbService) => {
   restApp.use((req, res, next) => {
     const err = new Error()
     err.status = 404
-    log.info({ err: err }, 'An unknown route has been requested')
+    log.info({ err: err }, 'An unknown resource has been requested')
     next(err)
   })
 

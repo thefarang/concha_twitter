@@ -17,7 +17,7 @@ const findOne = (conchaUserId) => {
   return documents[0]
 }
 
-const upsert = (document) => {
+const save = (document) => {
   documents.push(document)
 }
 
@@ -33,7 +33,7 @@ module.exports = {
   connect,
   disconnect,
   findOne,
-  upsert,
+  save,
   remove,
   removeAll
 }
