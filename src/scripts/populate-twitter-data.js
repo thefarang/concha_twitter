@@ -1,9 +1,9 @@
 'use strict'
 
-const log = require('../lib/log')
+const log = require('../services/log')
 const config = require('config')
 const mongoose = require('mongoose')
-let TwitterData = require('../models/twitter-data')
+let TwitterData = require('../models/schema/twitter')
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -29,7 +29,7 @@ new Promise((resolve, reject) => {
     twitterData.screenname = '@concha_app'
     twitterData.url = 'https://twitter.com/concha_app'
     twitterData.age = new Date('1970-01-01T00:00:00Z')
-    twitterData.save((err) => {
+    twitterData.upsert((err) => {
       if (err) {
         log.info({
           err: err,

@@ -1,65 +1,52 @@
 'use strict'
 
-const log = require('../lib/log')
+const log = require('../services/log')
 const express = require('express')
-const mongoose = require('mongoose')
-const TwitterData = require('../models/twitter-data')
 
-const ObjectId = mongoose.Types.ObjectId
 const router = express.Router()
 
-router.get('/:concha_user_id', function (req, res, next) {
-  TwitterData.findOne({
-    concha_user_id: new ObjectId(req.params.concha_user_id)
-  },
-  (err, data) => {
-    if (err) {
+router.get('/:concha_user_id', async (req, res, next) => {
+  try {
+    const twitterDoc = await req.app.get('dbService').findOne(req.params.concha_user_id)
+    if (twitterDoc === null) {
       log.info({
-        err: err,
         conchaUserId: req.params.concha_user_id
-      }, 'An error occurred whilst locating the users Twitter data')
-      return next(err)
+      }, 'Unable to locate the users Twitter document')
+
+      // Flow through to 404 handler
+      return next()
     }
 
-    if (data === null) {
-      const err = new Error()
-      err.status = 404
-      log.info({
-        err: err,
-        conchaUserId: req.params.concha_user_id
-      }, 'Could not locate the users Twitter data')
-      return next(err)
-    }
-
-    res.json(data)
-  })
+    res.json(twitterDoc)
+  } catch (err) {
+    log.info({
+      err: err.stack,
+      conchaUserId: req.params.concha_user_id
+    }, 'An error occurred whilst locating the users Twitter document')
+    return next(err)
+  }
 })
 
-router.get('/age/:concha_user_id', function (req, res, next) {
-  TwitterData.findOne({
-    concha_user_id: new ObjectId(req.params.concha_user_id)
-  },
-  (err, data) => {
-    if (err) {
+router.get('/age/:concha_user_id', async (req, res, next) => {
+  try {
+    const twitterDoc = await req.app.get('dbService').findOne(req.params.concha_user_id)
+    if (twitterDoc === null) {
       log.info({
-        err: err,
         conchaUserId: req.params.concha_user_id
-      }, 'An error occurred whilst locating the age of the users Twitter data')
-      return next(err)
+      }, 'Unable to find the age of the users Twitter document')
+
+      // Flow through to 404 handler
+      return next()
     }
 
-    if (data === null) {
-      const err = new Error()
-      err.status = 404
-      log.info({
-        err: err,
-        conchaUserId: req.params.concha_user_id
-      }, 'Unable to find the age of the users Twitter data')
-      return next(err)
-    }
-
-    res.json({ age: data.age })
-  })
+    res.json({ age: twitterDoc.age })
+  } catch (err) {
+    log.info({
+      err: err.stack,
+      conchaUserId: req.params.concha_user_id
+    }, 'An error occurred whilst locating the age of the users Twitter document')
+    return next(err)
+  }
 })
 
 module.exports = router

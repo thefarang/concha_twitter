@@ -1,78 +1,70 @@
 'use strict'
 
-const log = require('../lib/log')
+const log = require('../services/log')
 const express = require('express')
-const mongoose = require('mongoose')
-const TwitterData = require('../models/twitter-data')
 
-const ObjectId = mongoose.Types.ObjectId
 const router = express.Router()
 
 // Links the Concha user's account to Twitter
-router.post('/link', (req, res, next) => {
-  const twitterData = new TwitterData()
-  twitterData.concha_user_id = new ObjectId(req.body.concha_user_id)
-  twitterData.twitter_id = req.body.twitter_id
-  twitterData.oauth_token = req.body.oauth_token
-  twitterData.oauth_secret = req.body.oauth_secret
-  twitterData.screenname = req.body.screenname
-  twitterData.url = req.body.url
-  twitterData.save((err) => {
-    if (err) {
-      // Check for duplicates and mark as 409
-      if (err.code && err.code === 11000) {
-        err.status = 409
-      }
+router.post('/link', async (req, res, next) => {
+  const twitterDoc = {
+    concha_user_id: req.body.concha_user_id,
+    twitter_id: req.body.twitter_id,
+    oauth_token: req.body.oauth_token,
+    oauth_secret: req.body.oauth_secret,
+    screenname: req.body.screenname,
+    url: req.body.url
+  }
 
+  try {
+    // Check to see if a link already exists
+    const existingTwitterDoc = await req.app.get('dbService').findOne(twitterDoc.concha_user_id)
+    if (existingTwitterDoc !== null) {
+      // Mark duplicate as a 409 error
       log.info({
-        err: err,
-        twitterData: twitterData
-      }, 'An error occurred whilst linking the users Twitter account')
+        twitterDoc: twitterDoc
+      }, 'The users twitter account is already linked')
 
+      const err = new Error()
+      err.status = 409
       return next(err)
     }
-    res.json()
-  })
+
+    // Save the new Twitter link
+    await req.app.get('dbService').save(twitterDoc)
+    return res.json()
+  } catch (err) {
+    log.info({
+      err: err,
+      twitterDoc: twitterDoc
+    }, 'An error occurred whilst linking the users Twitter account')
+    return next(err)
+  }
 })
 
 // Unlinks the Concha user's account from their Twitter account
-router.delete('/link/:concha_user_id', (req, res, next) => {
-  TwitterData.findOne({
-    concha_user_id: new ObjectId(req.params.concha_user_id)
-  },
-  (err, data) => {
-    if (err) {
+router.delete('/link/:concha_user_id', async (req, res, next) => {
+  try {
+    const twitterDoc = await req.app.get('dbService').findOne(req.params.concha_user_id)
+    if (twitterDoc === null) {
       log.info({
-        err: err,
         conchaUserId: req.params.concha_user_id
-      }, 'An error occurred whilst locating the users Twitter data')
+      }, 'Unable to find the users Twitter document prior to deletion')
 
-      return next(err)
+      // Flow through to 404 handler
+      return next()
     }
 
-    if (data === null) {
-      const err = new Error()
-      err.status = 404
-      log.info({
-        err: err,
-        conchaUserId: req.params.concha_user_id
-      }, 'Unable to find the users Twitter data')
-
-      return next(err)
-    }
-
-    data.remove((err) => {
-      if (err) {
-        log.info({
-          err: err,
-          conchaUserId: req.params.concha_user_id
-        }, 'Unable to delete the users Twitter data')
-        return next(err)
-      }
-      res.status(204)
-      res.json()
-    })
-  })
+    await req.app.get('dbService').remove(req.params.concha_user_id)
+    res.status(204)
+    res.json()
+  } catch (err) {
+    log.info({
+      err: err,
+      conchaUserId: req.params.concha_user_id
+    }, 'An error occurred whilst unlinking the users Twitter account')
+    return next(err)
+  }
 })
 
 module.exports = router

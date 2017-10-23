@@ -1,12 +1,14 @@
 'use strict'
 
-const log = require('../lib/log')
-const app = require('../app')
+const log = require('../services/log')
 const http = require('http')
 
-/**
- * Normalize a port into a number, string, or false.
- */
+const dbService = require('../services/database/service')
+const mbService = require('../services/message-broker')
+const Twitter = require('../lib/twitter')
+const bootapp = require('../app')
+
+// Normalize a port into a number, string, or false.
 const normalizePort = (val) => {
   const port = parseInt(val, 10)
 
@@ -16,16 +18,13 @@ const normalizePort = (val) => {
   }
 
   if (port >= 0) {
-    // port number
     return port
   }
 
   return false
 }
 
-/**
- * Event listener for HTTP server "error" event.
- */
+// Event listener for HTTP server "error" event.
 const onError = (error) => {
   if (error.syscall !== 'listen') {
     throw error
@@ -48,11 +47,9 @@ const onError = (error) => {
   }
 }
 
-/**
- * @todo
- * Add logging
- * Event listener for HTTP server "listening" event.
- */
+// @todo
+// Add logging
+// Event listener for HTTP server "listening" event.
 const onListening = () => {
   /*
   const addr = server.address()
@@ -62,9 +59,20 @@ const onListening = () => {
   */
 }
 
+// Start the database
+dbService.connect()
+process.on('SIGINT', () => dbService.disconnect())
+
+// Inject app dependencies
+const twitter = new Twitter(dbService)
+mbService.bootstrap(twitter)
+const app = bootapp(dbService, mbService)
+
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '80')
 app.set('port', port)
+
+// Start the app
 const server = http.createServer(app)
 server.listen(port)
 server.on('error', onError)
