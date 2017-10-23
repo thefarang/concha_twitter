@@ -3,7 +3,7 @@
 const config = require('config')
 const log = require('../log')
 const mongoose = require('mongoose')
-const Twitter = require('./models/twitter')
+const Twitter = require('./schema/twitter')
 
 const ObjectId = mongoose.Types.ObjectId
 let isConnected = false

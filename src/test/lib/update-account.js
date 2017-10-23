@@ -4,10 +4,14 @@ const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
 
+const Twitter = require('../../lib/twitter')
 const dbService = require('../mocks/database')
 const mbService = require('../mocks/message-broker')
-const restService = require('../../services/rest/service')
-const app = require('../../app')(dbService, mbService, restService)
+
+// Inject app dependencies
+const app = require('../../app')(dbService, mbService)
+const twitter = new Twitter(dbService)
+mbService.bootstrap(twitter)
 
 chai.use(chaiHttp)
 const conchaUserId = '507f1f77bcf86cd799439011'

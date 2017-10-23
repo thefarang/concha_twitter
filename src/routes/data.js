@@ -1,6 +1,6 @@
 'use strict'
 
-const log = require('../../log')
+const log = require('../services/log')
 const express = require('express')
 
 const router = express.Router()
