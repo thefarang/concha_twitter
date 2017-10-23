@@ -72,6 +72,7 @@ const app = bootapp(dbService, mbService)
 const port = normalizePort(process.env.PORT || '80')
 app.set('port', port)
 
+// Start the app
 const server = http.createServer(app)
 server.listen(port)
 server.on('error', onError)

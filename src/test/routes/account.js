@@ -21,7 +21,8 @@ const testTwitterDoc = {
   oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',
   oauth_secret: 'PbKfYqSryyeKDWz4ebtY3o5ogNLG11WJuZBc9fQrQo',
   screenname: 'concha_app',
-  url: 'https://twitter.com/concha_app'
+  url: 'https://twitter.com/concha_app',
+  age: '1970-01-01T00:00:00.000Z'
 }
 
 /* eslint-disable no-unused-expressions */

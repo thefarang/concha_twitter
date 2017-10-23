@@ -32,7 +32,8 @@ describe('Twitter Account Message Broker', () => {
       oauth_token: '7588892-kagSNqWge8gB1WwE3plnFsJHAZVfxWD7Vb57p0b4&',
       oauth_secret: 'PbKfYqSryyeKDWz4ebtY3o5ogNLG11WJuZBc9fQrQo',
       screenname: 'concha_app',
-      url: 'https://twitter.com/concha_app'
+      url: 'https://twitter.com/concha_app',
+      age: '1970-01-01T00:00:00.000Z'
     })
 
     // Create a payload with which to update the document
@@ -42,7 +43,8 @@ describe('Twitter Account Message Broker', () => {
       no_of_tweets: 50,
       no_of_likes_received: 200,
       no_of_replies_received: 5,
-      no_of_retweets_received: 50
+      no_of_retweets_received: 50,
+      age: '2017-06-06T12:30:30.000Z'
     })
 
     // Publish the payload to the message broker.
@@ -63,6 +65,7 @@ describe('Twitter Account Message Broker', () => {
         expect(responseContents.no_of_likes_received).to.equal(200)
         expect(responseContents.no_of_replies_received).to.equal(5)
         expect(responseContents.no_of_retweets_received).to.equal(50)
+        expect(responseContents.age).to.equal('2017-06-06T12:30:30.000Z')
         done()
       })
   })
