@@ -15,7 +15,7 @@ const conchaUserId = '507f1f77bcf86cd799439011'
 /* eslint-disable no-unused-expressions */
 /* eslint-disable handle-callback-err */
 describe('Twitter Account Message Broker', () => {
-  beforeEach(() => { 
+  beforeEach(() => {
     dbService.removeAll()
     mbService.purgeQueue()
   })

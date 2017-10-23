@@ -1,13 +1,11 @@
 'use strict'
 
-const log = require('../../services/log')
-
 let documents = []
 
-const connect = () => { 
+const connect = () => {
 }
 
-const disconnect = () => { 
+const disconnect = () => {
 }
 
 const findOne = (conchaUserId) => {

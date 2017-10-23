@@ -1,6 +1,5 @@
 'use strict'
 
-let queue = []
 let consumeAction = null
 let dbService = null
 
@@ -10,8 +9,6 @@ const bootstrap = async (consumeActionIn, dbServiceIn) => {
 }
 
 const purgeQueue = () => {
-  queue = []
-
 }
 
 const sendToQueue = (payload) => {

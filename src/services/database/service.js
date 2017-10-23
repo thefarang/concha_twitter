@@ -66,9 +66,9 @@ const findOne = (conchaUserId) => {
 const save = async (document) => {
   return new Promise((resolve, reject) => {
     Twitter.findOneAndUpdate(
-      { concha_user_id: document.concha_user_id }, 
-      document, 
-      { upsert: true }, 
+      { concha_user_id: document.concha_user_id },
+      document,
+      { upsert: true },
       (err) => {
         // Here
         if (err) {
@@ -93,7 +93,7 @@ const remove = (conchaUserId) => {
         }, 'Unable to delete the users Twitter document')
         return reject(err)
       }
-      return resolve(twitterDoc)
+      return resolve(conchaUserId)
     })
   })
 }
