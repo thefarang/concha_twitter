@@ -11,7 +11,7 @@ let isConnected = false
 const connect = () => {
   if (!isConnected) {
     mongoose.Promise = global.Promise
-    mongoose.connect(config.get('mongoConn'), {
+    mongoose.connect(config.get('dbConn'), {
       useMongoClient: true
     })
     isConnected = true
@@ -63,14 +63,13 @@ const findOne = (conchaUserId) => {
   })
 }
 
-const save = async (document) => {
+const save = (document) => {
   return new Promise((resolve, reject) => {
     Twitter.findOneAndUpdate(
       { concha_user_id: document.concha_user_id },
       document,
       { upsert: true },
       (err) => {
-        // Here
         if (err) {
           log.info({
             err: err,
@@ -98,10 +97,25 @@ const remove = (conchaUserId) => {
   })
 }
 
+const removeAll = () => {
+  return new Promise((resolve, reject) => {
+    Twitter.remove({}, (err) => {
+      if (err) {
+        log.info({
+          err: err
+        }, 'An error occurred whilst deleting the Twitter documents')
+        return reject(err)
+      }
+      return resolve()
+    })
+  })
+}
+
 module.exports = {
   connect,
   disconnect,
   findOne,
   save,
-  remove
+  remove,
+  removeAll
 }

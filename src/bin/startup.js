@@ -6,7 +6,7 @@ const http = require('http')
 const dbService = require('../services/database/service')
 const mbService = require('../services/message-broker')
 const Twitter = require('../lib/twitter')
-const bootapp = require('../app')
+const bootApp = require('../app')
 
 // Normalize a port into a number, string, or false.
 const normalizePort = (val) => {
@@ -66,7 +66,7 @@ process.on('SIGINT', () => dbService.disconnect())
 // Inject app dependencies
 const twitter = new Twitter(dbService)
 mbService.bootstrap(twitter)
-const app = bootapp(dbService, mbService)
+const app = bootApp(dbService, mbService)
 
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '80')
