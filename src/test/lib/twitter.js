@@ -1,17 +1,17 @@
 'use strict'
 
+const log = require('../../services/log')
 const chai = require('chai')
 const expect = require('chai').expect
 const chaiHttp = require('chai-http')
 
 const Twitter = require('../../lib/twitter')
+
 const dbService = require('../mocks/database')
 const mbService = require('../mocks/message-broker')
+const bootApp = require('../../app')
 
-// Inject app dependencies
-const app = require('../../app')(dbService, mbService)
-const twitter = new Twitter(dbService)
-mbService.bootstrap(twitter)
+let app = null
 
 chai.use(chaiHttp)
 const conchaUserId = '507f1f77bcf86cd799439011'
@@ -19,9 +19,28 @@ const conchaUserId = '507f1f77bcf86cd799439011'
 /* eslint-disable no-unused-expressions */
 /* eslint-disable handle-callback-err */
 describe('Twitter Account Message Broker', () => {
-  beforeEach(() => {
-    dbService.removeAll()
-    mbService.purgeQueue()
+  before(() => {
+    // Connect to the database
+    dbService.connect()
+
+    // Insert app dependencies
+    const twitter = new Twitter(dbService)
+    mbService.bootstrap(twitter)
+    app = bootApp(dbService, mbService)
+  })
+
+  beforeEach(async () => {
+    try {
+      await dbService.removeAll()
+      await mbService.purgeQueue()
+    } catch (err) {
+      log.info({ err: err }, 'An error occurred whilst resetting the database')
+      process.exit(0)
+    }
+  })
+
+  after(() => {
+    dbService.disconnect()
   })
 
   it('Should correctly trigger an update of the database', (done) => {

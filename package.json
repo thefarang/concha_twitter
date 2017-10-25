@@ -1,8 +1,9 @@
 {
   "name": "concha_twitter",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
+    "reload": "node ./src/scripts/reload.js",
     "lint": "./node_modules/.bin/standard --verbose \"src/**/*.js\"",
     "fix-lint": "./node_modules/.bin/standard --fix \"src/**/*.js\"",
     "debug": "./node_modules/.bin/nodemon ./src/bin/startup.js",
